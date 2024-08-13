@@ -1,0 +1,46 @@
+1. docker pull ghcr.io/nvidia/cuda-quantum-dev:latest-base
+
+2. docker run --gpus all -it --name "cudaqlibs-0801" ghcr.io/nvidia/cuda-quantum-dev:latest-base
+
+3. Remove the existing cuda-quantum folder from workspaces.
+
+4. Install torch
+   python3 -m pip install torch transformers lightning ml_collections
+
+5. Copy the build script from cudaqlibs (shown below) into a file named build.sh and run it using bash build.sh.
+   May need to run apt-get update && apt-get install vim
+
+#####################
+export CC=gcc
+
+export CXX=g++
+ 
+git clone -b cudaqlib https://github.com/amccaskey/cuda-quantum
+
+cd cuda-quantum && mkdir build && cd build
+
+cmake .. -G Ninja \
+    -DLLVM_DIR=/opt/llvm/lib/cmake/llvm \
+    -DCUDAQ_ENABLE_PYTHON=TRUE -DCMAKE_INSTALL_PREFIX=$HOME/.cudaq
+
+ninja install
+ 
+apt-get install libblas-dev gfortran
+
+git clone https://github.com/cudaq-libraries/cudaqlib
+
+cd cudaqlib && mkdir build && cd build
+
+cmake .. -G Ninja -DCUDAQ_DIR=$HOME/.cudaq/lib/cmake/cudaq
+
+ninja
+
+export PYTHONPATH=$HOME/.cudaq:$PWD/python/cudaqlib
+
+ctest
+#############################
+
+Go to ~/cudaqlib/examples/python, then run the example.
+
+python3 gqe_h2.py
+

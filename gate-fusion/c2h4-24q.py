@@ -1,4 +1,8 @@
-# CUDAQ_MGPU_FUSE=4 python c2h4-24q.py 
+# with gate fusion:
+# CUDAQ_FUSION_MAX_QUBITS=4 python c2h4-24q.py 
+
+#without gate fusion:
+# CUDAQ_FUSION_MAX_QUBITS=1 python c2h4-24q.py 
 
 import openfermion
 import openfermionpyscf
@@ -13,7 +17,7 @@ from scipy.optimize import minimize
 import numpy as np
 
 # GPU
-cudaq.set_target("nvidia", option="mgpu")
+cudaq.set_target("nvidia")
 
 # 1- Classical pre-processing:
 

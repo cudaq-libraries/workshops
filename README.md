@@ -16,7 +16,7 @@ git clone -b 202410-nagoya --single-branch https://github.com/cudaq-libraries/wo
 ### Environment setup
 
 ```sh
-pjsub --interact -L rscgrp=cx-interactive, jobenv=singularity
+pjsub --interact -L rscgrp=cx-interactive,jobenv=singularity,elapse=3:00:00
 
 module load singularity
 singularity exec --nv docker://nvcr.io/nvidia/quantum/cuda-quantum:0.8.0 jupyter lab --notebook-dir=${HOME} --ip='*' --port=8888 --no-browser --allow-root

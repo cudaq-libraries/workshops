@@ -10,5 +10,21 @@ Happy learning with CUDA-Q!
 Materials for each materials are at the branch.
 For exapmle, cloning can be done by specifying a branch as follows:
 ```sh
-git clone -b 202407-ornl --single-branch https://github.com/cudaq-libraries/workshops.git
+git clone -b 202410-nagoya --single-branch https://github.com/cudaq-libraries/workshops.git
 ```
+
+### Environment setup
+
+```sh
+pjsub --interact -L rscgrp=cx-interactive, jobenv=singularity
+
+module load singularity
+singularity exec --nv docker://nvcr.io/nvidia/quantum/cuda-quantum:0.8.0 jupyter lab --notebook-dir=${HOME} --ip='*' --port=8888 --no-browser --allow-root
+```
+
+Second terminal:
+```sh
+ssh -L 8888:cx064:8888 <USERNAME>@flow-cx.cc.nagoya-u.ac.jp
+```
+
+The cx064, username, and port number need to be appropriately replaced.

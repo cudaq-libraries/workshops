@@ -5,15 +5,7 @@ Welcome to the CUDA-Q Hands-on Workshop Materials repository! This repository is
 
 Happy learning with CUDA-Q!
 
-### Branch
-
-Materials for each materials are at the branch.
-For exapmle, cloning can be done by specifying a branch as follows:
-```sh
-git clone -b 202410-nagoya --single-branch https://github.com/cudaq-libraries/workshops.git
-```
-
-### Environment setup
+## Environment setup
 
 ```sh
 pjsub --interact -L rscgrp=cx-interactive,jobenv=singularity,elapse=3:00:00
@@ -28,3 +20,12 @@ ssh -L 8888:cx064:8888 <USERNAME>@flow-cx.cc.nagoya-u.ac.jp
 ```
 
 The cx064, username, and port number need to be appropriately replaced.
+
+
+## Branch
+
+Materials for each materials are at the branch.
+For exapmle, cloning can be done by specifying a branch as follows:
+```sh
+git clone -b 202410-nagoya --single-branch https://github.com/cudaq-libraries/workshops.git
+```

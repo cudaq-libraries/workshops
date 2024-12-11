@@ -1,0 +1,4 @@
+[tool.jupytext.formats]
+"notebooks/" = "ipynb"
+"scripts/" = "py:nomarker"
+# to update all notebooks, run `find notebooks -name "*.ipynb" | xargs jupytext --sync`

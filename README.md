@@ -12,3 +12,10 @@ For exapmle, cloning can be done by specifying a branch as follows:
 ```sh
 git clone -b 202412-utokyo --single-branch https://github.com/cudaq-libraries/workshops.git
 ```
+
+### Singularity
+
+```sh
+module load singularity
+singularity pull docker://nvcr.io/nvidia/quantum/cuda-quantum:cu12-0.9.1
+```

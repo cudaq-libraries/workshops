@@ -25,6 +25,8 @@
 
 # Example of Quantum Circuit
 
+import numpy as np
+
 from cudaq.qis import *
 
 import cudaq
@@ -39,6 +41,7 @@ def circuit():
 
 
 print(cudaq.draw(circuit))
+
 
 # ### Qubit allocation
 #
@@ -106,6 +109,38 @@ print(cudaq.draw(circuit))
 # ```
 #
 # To learn more about the quantum operations available in CUDA-Q, visit [this page](https://nvidia.github.io/cuda-quantum/latest/specification/cudaq/kernels.html).
+
+# Gate examples
+
+@cudaq.kernel
+def do_nothing():
+    q = cudaq.qubit()
+
+@cudaq.kernel
+def x_gate():
+    q = cudaq.qubit()
+    x(q)
+
+@cudaq.kernel
+def h_gate():
+    q = cudaq.qubit()
+    h(q)
+
+@cudaq.kernel
+def bell():
+    q = cudaq.qvector(2)
+    h(q[0])    
+    x.ctrl(q[0], q[1])
+#    cx(q[0], q[1])
+
+
+print("initial state:", np.array(cudaq.get_state(do_nothing)))
+
+print("apply X:", np.array(cudaq.get_state(x_gate)))
+
+print("apply H:", np.array(cudaq.get_state(h_gate)))
+
+print("Bell state:", np.array(cudaq.get_state(bell)))
 
 # ### Quantum kernel
 #

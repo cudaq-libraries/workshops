@@ -86,7 +86,7 @@ print(cpu_times)
 cudaq.set_target("nvidia")
 
 gpu_times = []
-for n in range(10, 32):
+for n in range(10, 30):
     start = perf_counter()
     counts = cudaq.sample(ghz, n)
     end = perf_counter()
@@ -99,8 +99,10 @@ import matplotlib.pyplot as plt
 
 plt.plot([i[0] for i in cpu_times], ([i[1] for i in cpu_times]), label="CPU")
 plt.plot([i[0] for i in gpu_times], ([i[1] for i in gpu_times]), label="GPU")
+plt.xlabel("Number of qubits")
+plt.ylabel("Time [sec]")
 plt.legend()
-plt.show()
+plt.savefig("cpugpu.png")
 
 ### Version information
 print(cudaq.__version__)

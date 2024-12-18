@@ -205,7 +205,7 @@ print("Elapsed time (s) for multi-GPU: ", end_time - start_time)
 #
 # Prepare the script file like `run.sh`:
 # ```bash
-# # # #!/bin/bash
+# # # # #!/bin/bash
 #
 # #PJM -L jobenv=singularity
 # #PJM -L rscgrp=cx-debug

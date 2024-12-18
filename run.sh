@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#PJM -g <project-code>
+#PJM -g gt00
 #PJM -L rscgrp=tutorial-a
 #PJM -L gpu=1
 #PJM -L elapse=00:05:00

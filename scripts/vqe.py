@@ -114,7 +114,7 @@ plt.plot(exp_vals)
 plt.xlabel("Epochs")
 plt.ylabel("Energy")
 plt.title("VQE")
-plt.show()
+plt.savefig("vqe.png")
 
 print("Ground state energy:", np.linalg.eigvalsh(matrix)[0])
 print("Final energy", exp_vals[-1])

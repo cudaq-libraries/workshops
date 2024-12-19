@@ -13,7 +13,10 @@ module load singularity
 SIF=$(pwd)/cuda-quantum_cu12-0.9.1.sif
 OPT="--nv --bind $(pwd):/home/$PJM_O_LOGNAME"
 
-singularity exec $OPT $SIF pip install --user openfermionpyscf
-singularity exec $OPT $SIF python3 scripts/vqe.py
-# singularity exec $OPT $SIF nvidia-smi
-# singularity exec $OPT $SIF mpirun -np 4 python3 scripts/mqpu-mgpu/mqpu-mgpu.py --target nvidia --target-option mgpu
+# VQE
+# singularity exec $OPT $SIF pip install --user openfermionpyscf
+# singularity exec $OPT $SIF python3 scripts/vqe.py
+
+# MQPU, MGPU
+singularity exec $OPT $SIF python3 scripts/mqpu-mgpu/mqpu-mgpu.py --target nvidia --target-option mqpu
+singularity exec $OPT $SIF mpirun -np 4 python3 notebooks/mqpu-mgpu/ghz.py --target nvidia --target-option mgpu

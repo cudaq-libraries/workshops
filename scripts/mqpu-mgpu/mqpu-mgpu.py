@@ -154,13 +154,13 @@ end_time = timeit.default_timer()
 print("Elapsed time (s) for multi-GPU: ", end_time - start_time)
 
 
-# Multi-node, multi-GPU. (if included use mpirun -np n filename.py)
-# cudaq.mpi.initialize()
-# start_time = timeit.default_timer()
-# result = cudaq.observe(batch_ham, hamiltonian, execution=cudaq.parallel.mpi).expectation()
-# end_time = timeit.default_timer()
-# print("Elapsed time (s) for multi-GPU with mpi: ", end_time - start_time)
-# cudaq.mpi.finalize()
+Multi-node, multi-GPU. (if included use mpirun -np n filename.py)
+cudaq.mpi.initialize()
+start_time = timeit.default_timer()
+result = cudaq.observe(batch_ham, hamiltonian, execution=cudaq.parallel.mpi).expectation()
+end_time = timeit.default_timer()
+print("Elapsed time (s) for multi-GPU with mpi: ", end_time - start_time)
+cudaq.mpi.finalize()
 
 # # NVIDIA MGPU mode (multi gpu mode)
 #
@@ -205,7 +205,7 @@ print("Elapsed time (s) for multi-GPU: ", end_time - start_time)
 #
 # Prepare the script file like `run.sh`:
 # ```bash
-# # # # # # # #!/bin/bash
+# # # # # # # # #!/bin/bash
 #
 # #PJM -L jobenv=singularity
 # #PJM -L rscgrp=cx-debug

@@ -27,5 +27,5 @@ The cx064, username, and port number need to be appropriately replaced.
 Materials for each materials are at the branch.
 For exapmle, cloning can be done by specifying a branch as follows:
 ```sh
-git clone -b 202410-nagoya --single-branch https://github.com/cudaq-libraries/workshops.git
+git clone -b 202505-nagoya --single-branch https://github.com/cudaq-libraries/workshops.git
 ```

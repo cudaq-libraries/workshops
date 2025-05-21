@@ -8,10 +8,10 @@ Happy learning with CUDA-Q!
 ## Environment setup
 
 ```sh
-pjsub --interact -L rscgrp=cx-workshop,jobenv=singularity,elapse=1:00:00,node=1
+pjsub --interact -L rscgrp=cx-workshop,jobenv=singularity,elapse=4:00:00,node=1
 
 module load singularity
-singularity exec --nv docker://nvcr.io/nvidia/quantum/cuda-quantum:0.8.0 jupyter lab --notebook-dir=${HOME} --ip='*' --port=8888 --no-browser --allow-root
+singularity exec --nv docker://nvcr.io/nvidia/quantum/cuda-quantum:cu11-0.10.0 jupyter lab --notebook-dir=${HOME} --ip='*' --port=8888 --no-browser --allow-root
 ```
 
 Second terminal:

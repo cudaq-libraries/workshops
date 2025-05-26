@@ -1,14 +1,13 @@
 #!/bin/bash
 
-#PJM -g gt00
-#PJM -L rscgrp=tutorial-a
-#PJM -L gpu=1
-#PJM -L elapse=00:05:00
+#PBS -q lecture-g
+#PBS -W group_list=gt00
+#PBS -j oe
+#PBS -l select=1:mpiprocs=4
 
-module load cudaq
-source $MINICONDA_DIR/etc/profile.d/conda.sh
-conda activate cudaq-env
+cd ${PBS_O_WORKDIR}
 
-python scripts/cudaq_introduction.py
-# python scripts/cudaq_target.py
-# python scripts/hadamard_test.py
+source /work/gt00/share/cudaq-env/miniconda3/bin/activate
+source activate cuda-quantum
+
+python3 test.py

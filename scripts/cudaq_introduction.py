@@ -272,6 +272,31 @@ def bar(num_qubits: int):
     x.ctrl(controls, target)
 
 
+import cudaq
+
+
+# @cudaq.kernel
+# def bar(num_qubits: int):
+#     qubits = cudaq.qvector(num_qubits)
+#     h(qubits[0:3])
+#     controls = qubits[0:-1]
+#     target = qubits[-1]
+
+#     x.ctrl(controls, target)
+
+# the original code above does not work (regression)
+# https://github.com/NVIDIA/cuda-quantum/issues/2930
+# Here is the workaround
+
+@cudaq.kernel
+def bar(num_qubits: int):
+    qubits = cudaq.qvector(num_qubits)
+    h(qubits[0:3])
+    controls = qubits[0:num_qubits-1]
+    target = qubits[num_qubits-1]
+
+    x.ctrl(controls, target)
+
 print(cudaq.draw(bar, 10))
 
 
@@ -289,6 +314,13 @@ def ghz(num_qubits: int):
     q = cudaq.qvector(num_qubits)
     # Write your code here
 
+
+import cudaq
+
+@cudaq.kernel
+def ghz(num_qubits: int):
+    q = cudaq.qvector(num_qubits)
+    # Write your code here
 
 print(cudaq.draw(ghz, 10))
 
@@ -413,10 +445,34 @@ def mid_circuit_m(theta: float):
 
 angle = 0.5
 
+import cudaq
+
+
+@cudaq.kernel
+def mid_circuit_m(theta: float):
+    qubit = cudaq.qvector(2)
+    ancilla = cudaq.qubit()
+
+    ry(theta, ancilla)
+
+    a = mz(ancilla)
+    if a:
+        x(qubit[0])
+        x(ancilla)
+    else:
+        x(qubit[0])
+        x(qubit[1])
+
+    b = mz(ancilla)
+    c = mz(qubit)
+
+
+angle = 0.5
+
 result = cudaq.sample(mid_circuit_m, angle)
 print(result)
 
-# - Here, we see that we have measured the ancilla qubit to a register named ```aux```.
+# - Here, we see that we have measured the ancilla qubit to a register named ```a```.
 #
 # - If any measurements appear in the kernel, then only the measured qubits will appear in the ```__global__``` register, and they will be sorted in qubit allocation order.
 #
@@ -426,15 +482,15 @@ print(result)
 #     
 # ### Exercise 2
 #
-# Let's run your ghz kernel with sampler! Set `shots_count=10000`. Do you obtain the expected result?
+# Let's run your ghz kernel with sampler! Set `shots_count=10000` and the number of qubits is `10`. Do you obtain the expected result?
 #
 # </div>
 
-# Write your code here!
+Write your code here!
 
 # ### cudaq.observe()
 
-# - A common task in variational algorithms is the computation of the expected value of a given observable with respect to a parameterized quantum circuit ($\langle H\rangle_\theta = \langle \psi(\theta)\mid H \mid\psi(\theta)\rangle$).
+# - A common task in variational algorithms is the computation of the expected value of a given operator with respect to a parameterized quantum circuit ($\langle H\rangle_\theta = \langle \psi(\theta)\mid H \mid\psi(\theta)\rangle$).
 #
 # - The `cudaq.observe()` function is provided to enable one to quickly compute this expectation value via execution of the parameterized quantum circuit.
 #
@@ -476,10 +532,46 @@ spin_operator = (
 # Pre-computed angle that minimizes the energy expectation of the `spin_operator`.
 angle = 0.59
 
+# The example here shows a simple use case for the `cudaq.observe``
+# function in computing expected values of provided spin operators.
+
+import cudaq
+from cudaq import spin
+
+num_qubits = 2
+
+
+@cudaq.kernel
+def init_state(qubits: cudaq.qview):
+    n = qubits.size()
+    for i in range(n):
+        x(qubits[i])
+
+
+@cudaq.kernel
+def observe_example(theta: float):
+    qvector = cudaq.qvector(num_qubits)
+
+    init_state(qvector)
+    ry(theta, qvector[1])
+    x.ctrl(qvector[1], qvector[0])
+
+
+spin_operator = (
+    5.907
+    - 2.1433 * spin.x(0) * spin.x(1)
+    - 2.1433 * spin.y(0) * spin.y(1)
+    + 0.21829 * spin.z(0)
+    - 6.125 * spin.z(1)
+)
+
+# Pre-computed angle that minimizes the energy expectation of the `spin_operator`.
+angle = 0.59
+
 energy = cudaq.observe(observe_example, spin_operator, angle).expectation()
 print(f"Energy is {energy}")
 
-# ### Spin Hamiltonian operator
+# ### Spin operator
 #
 # CUDA-Q defines convenience functions in `cudaq.spin` namespace that produce the primitive X, Y, and Z Pauli operators on specified qubit indices which can subsequently be used in algebraic expressions to build up more complicated Pauli tensor products and their sums.
 #
@@ -506,7 +598,23 @@ for i in range(2):
 
 print(hamiltonian)
 
-print("Total number of terms in the spin hamiltonian: ", hamiltonian.get_term_count())
+from cudaq import spin
+
+operator = (
+    0.5 * spin.z(0)
+    + spin.x(1)
+    + spin.y(0)
+    + spin.y(0) * spin.y(1)
+    + spin.x(0) * spin.y(1) * spin.z(2)
+)
+
+# add some more terms
+for i in range(2):
+    operator += -2.0 * spin.z(i) * spin.z(i + 1)
+
+print(operator)
+
+print("Total number of terms in the spin operator: ", operator.get_term_count())
 
 # ### Parameterized Circuit
 
@@ -534,7 +642,31 @@ print(cudaq.draw(param_circuit, parameters))
 # Compute the expectation value using the initial parameters.
 expectation_value = cudaq.observe(param_circuit, hamiltonian, parameters).expectation()
 
-print("Expectation value of the Hamiltonian: ", expectation_value)
+import cudaq
+from cudaq import spin
+
+
+@cudaq.kernel
+def param_circuit(theta: list[float]):
+    # Allocate a qubit that is initialised to the |0> state.
+    qubit = cudaq.qubit()
+    # Define gates and the qubits they act upon.
+    rx(theta[0], qubit)
+    ry(theta[1], qubit)
+
+
+# Our operator will be the Z expectation value of our qubit.
+operator = spin.z(0)
+
+# Initial gate parameters which initialize the qubit in the zero state
+parameters = [0.0, 0.0]
+
+print(cudaq.draw(param_circuit, parameters))
+
+# Compute the expectation value using the initial parameters.
+expectation_value = cudaq.observe(param_circuit, operator, parameters).expectation()
+
+print("Expectation value of the operator: ", expectation_value)
 
 # You can construct `SpinOperator` using `from_word` class method.
 
@@ -548,7 +680,7 @@ print(op)
 # Calculate expectation value $\langle \mathrm{ghz} | ZZ...Z | \mathrm{ghz}\rangle$ and $\langle \mathrm{ghz} | XX...X | \mathrm{ghz}\rangle$ for 10 qubits and 20 qubits.
 # </div>
 
-# Write your codes here!
+# Write your code here!
 
 # ## Internal Representations
 # To look at the MLIR and QIR generated from your code

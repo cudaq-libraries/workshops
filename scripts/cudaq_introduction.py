@@ -486,7 +486,7 @@ print(result)
 #
 # </div>
 
-Write your code here!
+# Write your code here!
 
 # ### cudaq.observe()
 

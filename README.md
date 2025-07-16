@@ -10,5 +10,5 @@ Happy learning with CUDA-Q!
 Materials for each materials are at the branch.
 For exapmle, cloning can be done by specifying a branch as follows:
 ```sh
-git clone -b 202407-ornl --single-branch https://github.com/cudaq-libraries/workshops.git
+git clone -b main --single-branch https://github.com/cudaq-libraries/workshops.git
 ```

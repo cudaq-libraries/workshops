@@ -12,3 +12,22 @@ For exapmle, cloning can be done by specifying a branch as follows:
 ```sh
 git clone -b main --single-branch https://github.com/cudaq-libraries/workshops.git
 ```
+
+### Generating Scripts
+
+The notebooks under `notebooks/` are the source of truth. The Python files under `scripts/` are generated from those notebooks with Jupytext, using the pairing rules in `pyproject.toml`.
+
+- Edit notebooks first, then sync the paired scripts with Jupytext.
+- Treat `scripts/` as generated output. Commit it only when a workshop branch explicitly needs those generated files.
+
+To sync all notebooks:
+
+```sh
+find notebooks -name "*.ipynb" -print0 | xargs -0 jupytext --sync
+```
+
+To sync one notebook:
+
+```sh
+jupytext --sync notebooks/cudaq_introduction.ipynb
+```

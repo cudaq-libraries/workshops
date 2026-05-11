@@ -1,0 +1,15 @@
+.DS_Store
+
+__pycache__/
+*.py[cod]
+
+.ipynb_checkpoints/
+
+.venv/
+.container-venv/
+.python-userbase/
+.pip-cache/
+.singularity-cache/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/

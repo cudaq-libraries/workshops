@@ -1,6 +1,11 @@
+import os
+
 import cudaq
 
-cudaq.mpi.initialize()
+
+use_mpi = "mgpu" in cudaq.get_target().simulator.lower()
+if use_mpi:
+    cudaq.mpi.initialize()
 
 
 @cudaq.kernel
@@ -17,11 +22,14 @@ def kernel(qubit_count: int):
     mz(qvector)
 
 
-# print("Preparing GHZ state for", qubit_count, "qubits.")
-qubit_count = 33
+qubit_count = int(os.environ.get("QUBIT_COUNT", "33"))
 counts = cudaq.sample(kernel, qubit_count)
 
-if cudaq.mpi.rank() == 0:
+if not use_mpi or cudaq.mpi.rank() == 0:
+    print("qubit_count:", qubit_count)
+    if "CUDAQ_MAX_CPU_MEMORY_GB" in os.environ:
+        print("CUDAQ_MAX_CPU_MEMORY_GB:", os.environ["CUDAQ_MAX_CPU_MEMORY_GB"])
     print(counts)
 
-cudaq.mpi.finalize()
+if use_mpi:
+    cudaq.mpi.finalize()

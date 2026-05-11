@@ -1,3 +1,25 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cudaq-workshops"
+version = "0.0.0"
+requires-python = ">=3.10"
+dependencies = [
+    "matplotlib",
+    "openfermionpyscf",
+    "scipy",
+]
+
+[project.optional-dependencies]
+dev = [
+    "jupytext",
+]
+
+[tool.setuptools]
+packages = []
+
 [tool.jupytext.formats]
 "notebooks/" = "ipynb"
 "scripts/" = "py:nomarker"

@@ -16,14 +16,14 @@ cd "${PBS_O_WORKDIR}"
 
 module load singularity/4.2.1
 
-IMAGE="docker://nvcr.io/nvidia/quantum/cuda-quantum:cu13-0.14.2"
+CUDAQ_IMAGE="docker://nvcr.io/nvidia/quantum/cuda-quantum:cu13-0.14.2"
 SCRIPT="notebooks/mqpu-mgpu/ghz.py"
 SINGULARITY="$(command -v singularity)"
 QUBIT_COUNT="${QUBIT_COUNT:-33}"
 TARGET_OPTION="${TARGET_OPTION:-}"
 
 export QUBIT_COUNT
-export SINGULARITY_CACHEDIR="${PWD}/.singularity-cache"
+export SINGULARITY_CACHEDIR="${SINGULARITY_CACHEDIR:-/work/gt00/share/.singularity-cache}"
 
 SIF="${SINGULARITY_CACHEDIR}/cuda-quantum-cu13-0.14.2.sif"
 CUDAQ_ARGS=(--target nvidia)
@@ -32,7 +32,13 @@ if [ -n "${TARGET_OPTION}" ]; then
 fi
 
 mkdir -p "${SINGULARITY_CACHEDIR}"
-[ -f "${SIF}" ] || "${SINGULARITY}" pull "${SIF}" "${IMAGE}"
+[ -f "${SIF}" ] || "${SINGULARITY}" pull "${SIF}" "${CUDAQ_IMAGE}"
+
+echo "Host: $(hostname)"
+echo "Qubit count: ${QUBIT_COUNT}"
+echo "Target option: ${TARGET_OPTION:-<none>}"
+echo "Image: ${CUDAQ_IMAGE}"
+echo "SIF: ${SIF}"
 
 if [ "${TARGET_OPTION}" = "mgpu" ]; then
   export UCX_TLS="tcp,cuda_copy,self"
